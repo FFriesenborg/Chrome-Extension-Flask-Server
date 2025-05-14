@@ -1,0 +1,7 @@
+flask
+datetime
+flask_cors
+dotenv
+python-dotenv
+os
+requests
