@@ -87,4 +87,5 @@ def get_data():
     return jsonify(Markant_information)
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    port = int(os.environ.get('PORT', 8000))  # Default to 8000 if not set (for local testing)
+    app.run(host='0.0.0.0', port=port)
