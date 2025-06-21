@@ -29,13 +29,13 @@ headers_long = {
 @app.route('/data')
 def get_data():
     # Get query parameters
-    ordernumber = request.args.get("ordernumber")
+    invoicenumber = request.args.get("invoicenumber")
     LSnumber = request.args.get("LSnumber")
     LSdate = request.args.get("LSdate")
     WEnumber = request.args.get("WEnumber")
 
 
-    if not all([ordernumber, LSnumber, LSdate, WEnumber]):
+    if not all([invoicenumber, LSnumber, LSdate, WEnumber]):
         return jsonify({'error': 'Missing one or more required parameters'}), 400
 
     try:
@@ -46,28 +46,27 @@ def get_data():
     except ValueError:
         return jsonify({'error': 'Invalid date format for LSdate, expected dd.mm.yyyy'}), 400
 
-    # Get sales order
-    url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/salesOrders?filter[0][key]=documentNumber&filter[0][op]=equals&filter[0][value]={ordernumber}"
+    # Get invoice
+    #get invoice ID
+    url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/invoices?filter[0][key]=invoice&filter[0][op]=equals&filter[0][value]={invoicenumber}"
     response = requests.get(url, headers=headers).json()
+    invoiceID = response['data'][0]['id']
 
-    if not response["data"]:
-        return jsonify({"error": "Order not found"}), 404
-
-    orderid = response["data"][0]["id"]
+    #get invoice and sales order ID
+    url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/invoices/{invoiceID}"
+    invoice_response = requests.get(url, headers=headers_long).json()
+    invoice_data = invoice_response["data"][0]
+    orderid = invoice['data']['salesOrder']['id']
 
     # Get full sales order details
     url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/salesOrders/{orderid}"
     sales_data = requests.get(url, headers=headers_long).json()["data"]
 
-    # Get invoice
-    url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/invoices?filter[0][key]=salesOrder&filter[0][op]=equals&filter[0][value]={orderid}"
-    invoice_response = requests.get(url, headers=headers).json()
-    invoice_data = invoice_response["data"][0]
 
     # Build the response dict
     Markant_information = {
-        'Belegnummer': invoice_data['number'],
-        'Belegdatum': datetime.fromisoformat(invoice_data['date']).strftime("%d.%m.%Y"), 
+        'Belegnummer': invoice_data['documentNumber'],
+        'Belegdatum': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
         'Bestellnummer': sales_data['customerOrderNumber'],
         'Bestelldatum': datetime.strptime(sales_data['date'], "%Y-%m-%d").strftime("%d.%m.%Y"),
         'Lieferscheinnummer': LSnumber,
