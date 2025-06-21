@@ -55,8 +55,8 @@ def get_data():
     #get invoice and sales order ID
     url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/invoices/{invoiceID}"
     invoice_response = requests.get(url, headers=headers_long).json()
-    invoice_data = invoice_response["data"]
-    orderid = invoice['data']['salesOrder']['id']
+    invoice_data = invoice_response['data']
+    orderid = invoice_data['salesOrder']['id']
 
     # Get full sales order details
     url = f"https://{API_BRANCH_NAME}.xentral.biz/api/v1/salesOrders/{orderid}"
