@@ -65,22 +65,23 @@ def get_data():
 
     # Build the response dict
     Markant_information = {
-        'Belegnummer': invoice_data['documentNumber'],
-        'Belegdatum': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
-        'Bestellnummer': sales_data['customerOrderNumber'],
-        'Bestelldatum': datetime.strptime(sales_data['date'], "%Y-%m-%d").strftime("%d.%m.%Y"),
-        'Lieferscheinnummer': LSnumber,
-        'Lieferscheindatum': LSdate,
-        'Liefer-Leistungsdatum': Leistungdate,
-        'Waehrung': 'EUR',
-        'Valutadatum': '',
-        'Wareneingangsnummer': WEnumber,
-        'Wareneingangdatum': LSdate,
-        'Rechnungsreferenz-Nr.': sales_data['customerOrderNumber'],
-        'Rechnungsreferenzdatum': Leistungdate,
-        'Auftragsnummer': '',
-        'Zahlfrist': '29',
-        'GLN': sales_data['financials']['billingAddress']['gln']
+        'invoice_number': invoice_data['documentNumber'],
+        'date': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
+        'order_number': sales_data['customerOrderNumber'],
+        'order_date': datetime.strptime(sales_data['date'], "%Y-%m-%d").strftime("%d.%m.%Y"),
+        'dispatch_advice_number': LSnumber,
+        'dispatch_advice_date': LSdate,
+        'delivery_pickup_date': Leistungdate,
+        'currency': 'EUR',
+        'value_date': '',
+        'goods_receipt_number': WEnumber,
+        'goods_receipt_date': LSdate,
+        'bill_reference_number': sales_data['customerOrderNumber'],
+        'bill_reference_date': Leistungdate,
+        'supplier_order_number': '',
+        'supplier_order_date': '',
+        'payment_deadline': '29'#,
+        #'GLN': sales_data['financials']['billingAddress']['gln']
     }
 
     return jsonify(Markant_information)
