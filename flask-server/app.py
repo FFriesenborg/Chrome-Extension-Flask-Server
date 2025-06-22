@@ -65,8 +65,9 @@ def get_data():
 
     # Build the response dict
     Markant_information = {
+        #'GLN': sales_data['financials']['billingAddress']['gln'],
+        #'date': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
         'invoice_number': invoice_data['documentNumber'],
-        'date': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
         'order_number': sales_data['customerOrderNumber'],
         'order_date': datetime.strptime(sales_data['date'], "%Y-%m-%d").strftime("%d.%m.%Y"),
         'dispatch_advice_number': LSnumber,
@@ -80,8 +81,7 @@ def get_data():
         'bill_reference_date': Leistungdate,
         'supplier_order_number': '',
         'supplier_order_date': '',
-        'payment_deadline': '29'#,
-        #'GLN': sales_data['financials']['billingAddress']['gln']
+        'payment_deadline': '29'
     }
 
     return jsonify(Markant_information)
