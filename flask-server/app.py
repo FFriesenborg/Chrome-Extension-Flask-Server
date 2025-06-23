@@ -63,10 +63,11 @@ def get_data():
     sales_data = requests.get(url, headers=headers_long).json()["data"]
 
 
-    # Build the response dict
-    Markant_information = {
         #'GLN': sales_data['financials']['billingAddress']['gln'],
         #'date': datetime.fromisoformat(invoice_data['documentDate']).strftime("%d.%m.%Y"), 
+
+    # Build the response dict
+    Markant_information = {
         'invoice_number': invoice_data['documentNumber'],
         'order_number': sales_data['customerOrderNumber'],
         'order_date': datetime.strptime(sales_data['date'], "%Y-%m-%d").strftime("%d.%m.%Y"),
